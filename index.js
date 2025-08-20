@@ -2,7 +2,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');      
-const { Pool } = require('pg');   // <--- usar pg para Postgres
+const { Pool } = require('pg');  
 require('dotenv').config();
 
 const app = express();
@@ -11,13 +11,10 @@ const port = process.env.PORT || 3001;
 app.use(bodyParser.json());
 app.use(cors());  
 
-// 2. Conexión a PostgreSQL
+// 2. Conexión a PostgreSQL usando DATABASE_URL externa con SSL
 const pool = new Pool({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-  port: process.env.DB_PORT || 5432, // PostgreSQL por defecto
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false } // obligatorio para external URL de Render
 });
 
 pool.connect()
